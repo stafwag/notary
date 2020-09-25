@@ -13,6 +13,7 @@ import (
 	"crypto/sha512"
 	"crypto/x509"
 	"encoding/hex"
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -416,7 +417,7 @@ func TestClientTUFInteraction(t *testing.T) {
 	require.NoError(t, err)
 	require.Contains(t, output, target2)
 
-	// Check the file this was written to to inspect metadata
+	// Check the file this was written to inspect metadata
 	cache, err := nstorage.NewFileStore(
 		filepath.Join(tempDir, "tuf", filepath.FromSlash("gun"), "metadata"),
 		"json",
@@ -762,7 +763,7 @@ func TestClientTUFAddByHashInteraction(t *testing.T) {
 	require.NoError(t, err)
 	require.Contains(t, output, target4)
 
-	// Check the file this was written to to inspect metadata
+	// Check the file this was written to inspect metadata
 	cache, err := nstorage.NewFileStore(
 		filepath.Join(tempDir, "tuf", filepath.FromSlash("gun"), "metadata"),
 		"json",
@@ -1802,6 +1803,7 @@ func tempDirWithConfig(t *testing.T, config string) string {
 }
 
 func TestMain(m *testing.M) {
+	flag.Parse()
 	if testing.Short() {
 		// skip
 		os.Exit(0)

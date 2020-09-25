@@ -11,7 +11,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/theupdateframework/notary/storage/rethinkdb"
 	"github.com/theupdateframework/notary/tuf/data"
-	"gopkg.in/gorethink/gorethink.v3"
+	gorethink "gopkg.in/rethinkdb/rethinkdb-go.v6"
 )
 
 // RethinkDB has eventual consistency. This represents a 60 second blackout
@@ -38,7 +38,7 @@ func (r RDBTUFFile) TableName() string {
 	return TUFFileTableName
 }
 
-// Change defines the the fields required for an object in the changefeed
+// Change defines the fields required for an object in the changefeed
 type Change struct {
 	ID        string    `gorethink:"id,omitempty" gorm:"primary_key" sql:"not null"`
 	CreatedAt time.Time `gorethink:"created_at"`

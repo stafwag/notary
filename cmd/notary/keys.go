@@ -71,7 +71,7 @@ var cmdKeyPasswdTemplate = usageTemplate{
 var cmdKeyImportTemplate = usageTemplate{
 	Use:   "import pemfile [ pemfile ... ]",
 	Short: "Imports all keys from all provided .pem files",
-	Long:  "Imports all keys from all provided .pem files by reading each PEM block from the file and writing that block to a unique object in the local keystore. A Yubikey will be the prefferred import location for root keys if present.",
+	Long:  "Imports all keys from all provided .pem files by reading each PEM block from the file and writing that block to a unique object in the local keystore. A Yubikey will be the preferred import location for root keys if present.",
 }
 
 var cmdKeyExportTemplate = usageTemplate{
@@ -231,14 +231,14 @@ func (k *keyCommander) keysGenerate(cmd *cobra.Command, args []string) error {
 
 	// If we were provided an argument lets attempt to use it as an algorithm
 	if len(args) > 0 {
-		algorithm = args[0]
+		algorithm = strings.ToLower(args[0])
 	}
 
 	allowedCiphers := map[string]bool{
 		data.ECDSAKey: true,
 	}
 
-	if !allowedCiphers[strings.ToLower(algorithm)] {
+	if !allowedCiphers[algorithm] {
 		return fmt.Errorf("Algorithm not allowed, possible values are: ECDSA")
 	}
 
@@ -557,7 +557,9 @@ func (k *keyCommander) importKeys(cmd *cobra.Command, args []string) error {
 		if err != nil {
 			return err
 		}
-		defer from.Close()
+		defer func() {
+			_ = from.Close()
+		}()
 		if err = trustmanager.ImportKeys(from, importers, k.importRole, k.keysImportGUN, k.getRetriever()); err != nil {
 			return err
 		}
@@ -586,7 +588,9 @@ func (k *keyCommander) exportKeys(cmd *cobra.Command, args []string) error {
 		if err != nil {
 			return err
 		}
-		defer f.Close()
+		defer func() {
+			_ = f.Close()
+		}()
 		out = f
 	}
 

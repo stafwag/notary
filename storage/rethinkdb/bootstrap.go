@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/sirupsen/logrus"
-	"gopkg.in/gorethink/gorethink.v3"
+	gorethink "gopkg.in/rethinkdb/rethinkdb-go.v6"
 )
 
 // Wait for 60 seconds maximum on Wait() calls for rethink
@@ -28,7 +28,7 @@ type Table struct {
 	PrimaryKey interface{}
 	// Keys are the index names. If len(value) is 0, it is a simple index
 	// on the field matching the key. Otherwise, it is a compound index
-	// on the list of fields in the corrensponding slice value.
+	// on the list of fields in the corresponding slice value.
 	SecondaryIndexes map[string][]string
 	Config           map[string]string
 	//JSONUnmarshaller takes a byte slice representing JSON data and knows how
